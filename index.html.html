@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KFlix - Stream Movies Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+        }
+
+        .creator {
+            font-size: 14px;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .creator span {
+            color: #e50914;
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        /* Top Banner Ad */
+        .ad-banner-top {
+            margin: 20px auto;
+            max-width: 1400px;
+            padding: 0 20px;
+        }
+
+        .ad-banner-content {
+            background: rgba(229, 9, 20, 0.1);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .ad-banner-content:hover {
+            background: rgba(229, 9, 20, 0.2);
+            transform: scale(1.02);
+        }
+
+        .ad-banner-content img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+        }
+
+        .ad-placeholder {
+            color: #aaa;
+            font-size: 18px;
+        }
+
+        /* Sidebar Ad */
+        .ad-sidebar {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 160px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            z-index: 999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ad-sidebar:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .ad-sidebar img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .ad-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e50914;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Mid Banner Ad */
+        .ad-banner-mid {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(229, 9, 20, 0.05);
+            border: 2px dashed #e50914;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-banner-mid:hover {
+            background: rgba(229, 9, 20, 0.1);
+        }
+
+        .ad-banner-mid img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 8px;
+        }
+
+        .category {
+            margin-bottom: 60px;
+        }
+
+        .category-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #e50914;
+            border-left: 4px solid #e50914;
+            padding-left: 15px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+            border-color: #e50914;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .movie-year {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .watch-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .watch-btn:hover {
+            background: #b20710;
+        }
+
+        /* Video Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            border: 2px solid #e50914;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e50914;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.3s;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: #b20710;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 70vh;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Pre-Video Ad Modal (Multi-Step) */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .ad-modal-content {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 700px;
+            width: 100%;
+            border: 2px solid #e50914;
+            position: relative;
+            text-align: center;
+        }
+
+        .ad-step {
+            display: none;
+        }
+
+        .ad-step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .ad-countdown {
+            font-size: 56px;
+            color: #e50914;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        }
+
+        .ad-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .ad-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e50914, #ff6b6b);
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        .ad-button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .ad-button:hover {
+            background: #b20710;
+            transform: scale(1.05);
+        }
+
+        .ad-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .ad-message {
+            font-size: 20px;
+            color: #aaa;
+            margin: 15px 0;
+        }
+
+        .ad-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .ad-iframe-container {
+            width: 100%;
+            height: 350px;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .ad-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #e50914;
+            transform: scale(1.3);
+        }
+
+        .ad-skip-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        /* Floating Ad */
+        .ad-floating {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #e50914;
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 998;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .ad-floating:hover {
+            transform: translateY(-5px);
+        }
+
+        .ad-floating img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .movie-poster {
+                height: 225px;
+            }
+
+            .video-container {
+                height: 50vh;
+            }
+
+            .ad-countdown {
+                font-size: 42px;
+            }
+
+            .ad-sidebar {
+                display: none;
+            }
+
+            .ad-floating {
+                width: 200px;
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .ad-modal-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">KFlix</div>
+        <div class="creator">Created by <span>AZHAN HAMZA</span></div>
+    </div>
+
+    <!-- Top Banner Ad -->
+    <div class="ad-banner-top" id="topBanner">
+        <div class="ad-banner-content" onclick="openAdLink('topBanner')">
+            <div class="ad-placeholder" id="topBannerContent">📢 Advertisement Space</div>
+        </div>
+    </div>
+
+    <!-- Sidebar Ad -->
+    <div class="ad-sidebar" id="sidebarAd" onclick="openAdLink('sidebar')">
+        <button class="ad-close" onclick="closeSidebarAd(event)">×</button>
+        <div id="sidebarAdContent">
+            <div class="ad-placeholder" style="font-size: 14px;">Side Ad</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="category">
+            <h2 class="category-title">Bollywood Movies</h2>
+            <div class="movies-grid" id="bollywood-grid"></div>
+        </div>
+
+        <!-- Mid Banner Ad -->
+        <div class="ad-banner-mid" id="midBanner" onclick="openAdLink('midBanner')">
+            <div id="midBannerContent">
+                <div class="ad-placeholder">📢 Advertisement Space</div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">Hollywood Movies</h2>
+            <div class="movies-grid" id="hollywood-grid"></div>
+        </div>
+
+        <div class="category">
+            <h2 class="category-title">International Movies</h2>
+            <div class="movies-grid" id="international-grid"></div>
+        </div>
+    </div>
+
+    <!-- Floating Bottom Ad -->
+    <div class="ad-floating" id="floatingAd" onclick="openAdLink('floating')">
+        <button class="ad-close" onclick="closeFloatingAd(event)">×</button>
+        <div id="floatingAdContent">
+            <div class="ad-placeholder" style="font-size: 14px;">Bottom Ad</div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeVideo()">&times;</button>
+            <div class="video-container" id="videoContainer"></div>
+            <div class="video-title" id="videoTitle"></div>
+        </div>
+    </div>
+
+    <!-- Multi-Step Ad Modal -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-modal-content">
+            <div class="step-indicator" id="stepIndicator"></div>
+            
+            <!-- Ad Steps -->
+            <div id="adSteps"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // ADVERTISEMENT CONFIGURATION - EDIT HERE
+        // ========================================
+        const ADS_CONFIG = {
+            // Top Banner Ad
+            topBanner: {
+                enabled: true,
+                type: 'text', // 'text', 'image', or 'html'
+                content: 'بۆ ڕیکلام کردن پەیوەندیمان پێوە بکە',
+                imageUrl: '',
+                htmlCode: '', // Custom HTML code
+                link: 'https://t.me/azhanhammza'
+            },
+
+            // Sidebar Ad (Fixed position)
+            sidebar: {
+                enabled: true,
+                type: 'text',
+                content: '📺 Follow instagram',
+                imageUrl: '',
+                htmlCode: '',
+                link: 'https://www.instagram.com/azhanhammza/'
+            },
+
+            // Mid Banner Ad (Between categories)
+            midBanner: {
+                enabled: true,
+                type: 'text',
+                content: '⭐ Premium Movies - Click Here',
+                imageUrl: '',
+                htmlCode: '',
+                link: 'https://example.com'
+            },
+
+            // Floating Bottom Ad
+            floating: {
+                enabled: true,
+                type: 'text',
+                content: '🔥 Hot Deals!',
+                imageUrl: '',
+                htmlCode: '',
+                link: 'https://t.me/azhanhammza'
+            },
+
+            // Multi-Step Pre-Video Ads
+            preVideoAds: {
+                enabled: true,
+                steps: [
+                    // Step 1
+                    {
+                        type: 'countdown', // 'countdown', 'image', 'iframe', 'html'
+                        duration: 5, // seconds
+                        title: 'Advertisement',
+                        message: 'تکایە چاوەڕوان بە {time} seconds',
+                        content: 'سپاس بۆ چاوەڕوانیت!',
+                        imageUrl: '',
+                        iframeUrl: '',
+                        htmlCode: '',
+                        link: 'https://t.me/azhanhammza',
+                        buttonText: 'Continue',
+                        skippable: false // Can skip before timer ends?
+                    },
+                    // Step 2 - Add more steps if needed
+                    {
+                        type: 'image',
+                        duration: 3,
+                        title: 'Special Offer',
+                        message: 'Check out our latest content',
+                        imageUrl: '',
+                        link: 'https://t.me/azhanhammza',
+                        buttonText: 'Continue to Movie',
+                        skippable: false
+                    }
+                    // Add more steps here...
+                ]
+            }
+        };
+
+        // ========================================
+        // MOVIES DATABASE
+        // ========================================
+        const movies = {
+            bollywood: [
+                {title: "Pathaan", year: "2023", server: "https://www.yourupload.com/embed/e42F64DA08gO", poster: "https://filmfare.wwmindia.com/content/2022/dec/pathaan21669878743.jpg"},
+                {title: "Jawan", year: "2023", server: "https://www.yourupload.com/watch/Ov7Jk2b84BJx", poster: "https://assets.gadgets360cdn.com/pricee/assets/product/202206/Jawan-poster_1655912386.jpg"},
+                {title: "Animal", year: "2023", server: "https://drive.google.com/file/d/1uFdTTWZfmYG_-BrUmo5_f6cNNW_fMiYH/view", poster: "https://th.bing.com/th/id/R.9afb01c901dc6961a1d5646c68499b0b?rik=Liz06t7468JG2Q&riu=http%3a%2f%2fwww.impawards.com%2fintl%2findia%2f2023%2fposters%2fanimal.jpg&ehk=dOQrr30Ru%2bAqRVnRqtpScvj16xZKDKr8slmu1mAlbqk%3d&risl=&pid=ImgRaw&r=0"},
+                {title: "Dunki", year: "2023", server: "https://ok.ru/video/9698783857279", poster: "https://tse3.mm.bing.net/th/id/OIP.ca5eODWUjm8P12HV06Uk9AHaJv?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Tiger 3", year: "2023", server: "https://example.com/tiger3", poster: "https://tse3.mm.bing.net/th/id/OIP.a5F8a-SPXG9zkDZSEIfD8AHaKJ?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Rocky Aur Rani", year: "2023", server: "https://www.bilibili.tv/en/video/4791864103404032", poster: "https://wp.scoopwhoop.com/wp-content/uploads/2023/05/RRKPK1.jpg?w=819"},
+                {title: "Gadar 2", year: "2023", server: "https://www.yourupload.com/watch/80AoKk3175xp", poster: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEghvmc5fDZ7euAfbsDxF_2N1aa6T6F5i9_1TAUHf18HtKDuZpCh5dI7VOjnTdf2kMJ1IpSfIpbMmGcxNi49n_6jiKvjYlhtzMbtLPFfcXScqZHXE9tbGZ_G4d_Aa-UK47y-P5QGHGZEA_dakJrDFXuN7hfHHZF2gzQ4wqFcjIYGmxpjMDiIcIe0A82u/s1600/gadar-2-sunny-deol-movie.jpg"},
+                {title: "OMG 2", year: "2023", server: "https://www.bilibili.tv/en/video/4788844572579328?bstar_from=bstar-web.ugc-video-detail.related-recommend.all", poster: "https://tse1.mm.bing.net/th/id/OIP.1uftlRMwi0iZlSE8DBxlegHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Mission Raniganj", year: "2023", server: "https://www.bilibili.tv/en/video/4789402710049792", poster: "https://cinema.mu/wp-content/uploads/2023/10/mission-raniganj-poster-500x740.jpg"},
+                {title: "Fukrey 3", year: "2023", server: "https://www.bilibili.tv/en/video/4789156829856256?bstar_from=bstar-web.ugc-video-detail.related-recommend.all", poster: "https://tse1.mm.bing.net/th/id/OIP.kaFRSTK6HJt9tqlnPl2-2QHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Sam Bahadur", year: "2023", server: "https://www.bilibili.tv/en/video/4790074851722240", poster: "https://image.tmdb.org/t/p/original/ok5ZxVuU72LDX3W6kfgXsPVMJwY.jpg"},
+                {title: "Dream Girl 2", year: "2023", server: "https://www.bilibili.tv/en/video/4789537288094208?bstar_from=bstar-web.ugc-video-detail.related-recommend.all", poster: "https://english.cdn.zeenews.com/sites/default/files/ayushamann-dream-girl-2.jpg"},
+                {title: "Adipurush", year: "2023", server: "https://www.yourupload.com/watch/oj3FgtkH2WpM", poster: "https://ik.imagekit.io/j83rchiauw/seo_popular_master/202306171553_L1eKe8QbKceeZ17V.jpg"},
+                {title: "Zara Hatke Zara Bachke", year: "2023", server: "https://www.bilibili.tv/en/video/4791298876506112", poster: "https://image.tmdb.org/t/p/original/bzzxTkcqvyFtllWbCG7cSGY7bcL.jpg"},
+                {title: "Satyaprem Ki Katha", year: "2023", server: "https://www.yourupload.com/watch/kYM2551XiRF4", poster: "https://tse2.mm.bing.net/th/id/OIP.KnLfdDaZiI03yZeL6EOY5gHaLH?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Bholaa", year: "2023", server: "https://www.yourupload.com/watch/Y23r0g0FTwMT", poster: "https://tse1.mm.bing.net/th/id/OIP.xObc2U5zuM_V9FMu2Hr5AwHaJ4?rs=1&pid=ImgDetMain&o=7&rm=3"}
+            ],
+            hollywood: [
+                {title: "Guardians of the Galaxy 3", year: "2023", server: "https://www.yourupload.com/watch/o7v2Pfc1Do7S", poster: "https://th.bing.com/th/id/R.ce359da81fc95c21890b674e5cb8e959?rik=R%2bfa2jwl5ek1eg&riu=http%3a%2f%2fcdn.collider.com%2fwp-content%2fuploads%2fguardians-of-the-galaxy-poster-star-lord.jpg&ehk=71srdLI8qvXF%2baTjSLKAQCh3Mj4EkhgeYvvFX%2bmc9pc%3d&risl=&pid=ImgRaw&r=0"},
+                {title: "Spider-Man: Across", year: "2023", server: "https://www.2embed.cc/embed/tt9362722", poster: "https://tse4.mm.bing.net/th/id/OIP.V0ustTI4Xr26oBuCCEV7GAHaK8?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "The Super Mario Bros", year: "2023", server: "https://kurdsub.uns.bio/#pkjw1n", poster: "https://nintendoeverything.com/wp-content/uploads/The-Super-Mario-Bros.-Movie-poster.jpg"},
+                {title: "Fast X", year: "2023", server: "https://www.yourupload.com/embed/E3G5ig8jx0Gw", poster: "https://tse3.mm.bing.net/th/id/OIP.7e_r_6NEHista9U6MmTXAAHaLs?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Mission: Impossible", year: "2023", server: "https://www.yourupload.com/embed/W41C1B1sc2l3", poster: "https://tse3.mm.bing.net/th/id/OIP.ppP2hfBCl0bY2l-WWev-DQAAAA?w=400&h=600&rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Indiana Jones", year: "2023", server: "https://www.yourupload.com/embed/W41C1B1sc2l3", poster: "https://th.bing.com/th/id/R.176b4ca3296728b92368b908e94fb2bc?rik=EkbiCUSNAVtqZg&pid=ImgRaw&r=0"},
+                {title: "Detective Knight: Rogue", year: "2022", server: "https://iplayerhls.com/e/hii2xnqbzt50", poster: "https://images.fandango.com/ImageRenderer/820/0/redesign/static/img/default_poster.png/0/images/masterrepository/fandango/229252/detectiveknightrogue-posterart.jpg"},
+                {title: "Transformers: Rise", year: "2023", server: "https://vidmoly.net/embed-gmtjdfu341td.html", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFhreXTVXzdtN8WeN3tMJkw9uRNYaZEC3UgA&s"},
+                {title: "The Naked Gun", year: "2025", server: "https://iplayerhls.com/e/3883108cujrf", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq1pSxTpatLdrtK3aPQeLpQTSIm_MIC3u63tcw8i3gWeU7Fn5soCadt8GyG9J9bZZw128J&s=10"},
+                {title: "Ice Road: Vengeance", year: "2025", server: "https://kurdsub.uns.bio/#twbmdn", poster: "https://m.media-amazon.com/images/M/MV5BNjNlOGE0ZmMtNTk2MC00NTBhLTg2Y2QtZjdkZjIwNjQzYzY3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"},
+                {title: "Ant-Man and the Wasp", year: "2023", server: "https://vidmoly.net/embed-abpfy8t1wue5.html", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSewbjvYfPJkCBWq5ZXVD1la6sLzW3JhPvYyQ&s"},
+                {title: "The Marvels", year: "2023", server: "https://dhtpre.com/embed/cqp94wl9zit8", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr2CHFXhorQkI9wP5KMf290fdqX7eRnl95P_BddZBIEuCqOAI7FYUnILfgo_ovnCK4ppeQyA&s=10"},
+                {title: "Aquaman 2", year: "2023", server: "https://swhoi.com/e/jq1144rfe4hc", poster: "https://static1.srcdn.com/wordpress/wp-content/uploads/2023/09/aquaman-and-the-lost-kingdom-poster.jpg"},
+                {title: "Dune: Part Two", year: "2024", server: "https://jodwish.com/e/5ff2wl7vork0", poster: "https://tse3.mm.bing.net/th/id/OIP.YrrkdAkHtSHvPOzOUyQ_EwHaK3?w=1500&h=2202&rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "The Electric State", year: "2025", server: "https://kurdsub.uns.bio/#6h9fpk", poster: "https://tse2.mm.bing.net/th/id/OIP.-R9zK7N76u0qx6K55KyargHaK-?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "Stolen Girl", year: "2025", server: "https://vstreamer.richstarling.box.ca/stream/1036", poster: "https://tse4.mm.bing.net/th/id/OIP.kAbju0gRDxAG8K3eu4VKmAHaKl?rs=1&pid=ImgDetMain&o=7&rm=3"},
+                {title: "The Exorcist: Believer", year: "2023", server: "https://vidmoly.net/embed-0ss0yor91ft1.html", poster: "https://image.tmdb.org/t/p/original/so4zbf0riOFmKp3aIT7YZeglB3f.jpg"},
+                {title: "Saw X", year: "2023", server: "https://vidmoly.net/embed-wfd3cbsojfau.html", poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRoc0i-7JHQUuTCYXNcTACdoaogXVjMPQdoQ&s"}
+            ],
+            international: []
+        };
+
+        // ========================================
+        // AD SYSTEM FUNCTIONS
+        // ========================================
+
+        // Initialize all banner ads
+        function initBannerAds() {
+            // Top Banner
+            if (ADS_CONFIG.topBanner.enabled) {
+                const content = document.getElementById('topBannerContent');
+                content.innerHTML = getAdContent(ADS_CONFIG.topBanner);
+            } else {
+                document.getElementById('topBanner').style.display = 'none';
+            }
+
+            // Sidebar
+            if (ADS_CONFIG.sidebar.enabled) {
+                const content = document.getElementById('sidebarAdContent');
+                content.innerHTML = getAdContent(ADS_CONFIG.sidebar);
+            } else {
+                document.getElementById('sidebarAd').style.display = 'none';
+            }
+
+            // Mid Banner
+            if (ADS_CONFIG.midBanner.enabled) {
+                const content = document.getElementById('midBannerContent');
+                content.innerHTML = getAdContent(ADS_CONFIG.midBanner);
+            } else {
+                document.getElementById('midBanner').style.display = 'none';
+            }
+
+            // Floating
+            if (ADS_CONFIG.floating.enabled) {
+                const content = document.getElementById('floatingAdContent');
+                content.innerHTML = getAdContent(ADS_CONFIG.floating);
+            } else {
+                document.getElementById('floatingAd').style.display = 'none';
+            }
+        }
+
+        // Get ad content based on type
+        function getAdContent(adConfig) {
+            if (adConfig.type === 'image' && adConfig.imageUrl) {
+                return `<img src="${adConfig.imageUrl}" alt="Ad">`;
+            } else if (adConfig.type === 'html' && adConfig.htmlCode) {
+                return adConfig.htmlCode;
+            } else {
+                return `<div class="ad-placeholder">${adConfig.content}</div>`;
+            }
+        }
+
+        // Open ad link
+        function openAdLink(adType) {
+            const config = ADS_CONFIG[adType];
+            if (config && config.link) {
+                window.open(config.link, '_blank');
+            }
+        }
+
+        // Close sidebar ad
+        function closeSidebarAd(event) {
+            event.stopPropagation();
+            document.getElementById('sidebarAd').style.display = 'none';
+        }
+
+        // Close floating ad
+        function closeFloatingAd(event) {
+            event.stopPropagation();
+            document.getElementById('floatingAd').style.display = 'none';
+        }
+
+        // ========================================
+        // MULTI-STEP AD SYSTEM
+        // ========================================
+
+        let currentStep = 0;
+        let stepTimers = [];
+        let currentMovie = null;
+
+        // Show multi-step ads
+        function showMultiStepAds() {
+            if (!ADS_CONFIG.preVideoAds.enabled || ADS_CONFIG.preVideoAds.steps.length === 0) {
+                loadMovie();
+                return;
+            }
+
+            const modal = document.getElementById('adModal');
+            const stepsContainer = document.getElementById('adSteps');
+            const stepIndicator = document.getElementById('stepIndicator');
+            
+            // Clear previous content
+            stepsContainer.innerHTML = '';
+            stepIndicator.innerHTML = '';
+            currentStep = 0;
+
+            // Create step indicators
+            ADS_CONFIG.preVideoAds.steps.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'step-dot' + (index === 0 ? ' active' : '');
+                dot.id = `stepDot${index}`;
+                stepIndicator.appendChild(dot);
+            });
+
+            // Create all steps
+            ADS_CONFIG.preVideoAds.steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'ad-step' + (index === 0 ? ' active' : '');
+                stepDiv.id = `step${index}`;
+                stepDiv.innerHTML = createStepContent(step, index);
+                stepsContainer.appendChild(stepDiv);
+            });
+
+            modal.style.display = 'flex';
+            startStep(0);
+        }
+
+        // Create step content
+        function createStepContent(step, index) {
+            let content = `<h2 style="color: #e50914; margin-bottom: 20px; font-size: 28px;">${step.title}</h2>`;
+
+            if (step.type === 'countdown') {
+                const message = step.message.replace('{time}', `<span id="countdown${index}">${step.duration}</span>`);
+                content += `
+                    <p class="ad-message">${message}</p>
+                    <div class="ad-countdown" id="countdownDisplay${index}">${step.duration}</div>
+                    <div class="ad-progress-bar">
+                        <div class="ad-progress-fill" id="progressBar${index}"></div>
+                    </div>
+                `;
+            }
+
+            if (step.type === 'image' && step.imageUrl) {
+                content += `<img src="${step.imageUrl}" class="ad-image" alt="Ad">`;
+            } else if (step.type === 'iframe' && step.iframeUrl) {
+                content += `
+                    <div class="ad-iframe-container">
+                        <iframe src="${step.iframeUrl}"></iframe>
+                    </div>
+                `;
+            } else if (step.type === 'html' && step.htmlCode) {
+                content += step.htmlCode;
+            } else if (step.content) {
+                content += `<p style="font-size: 18px; color: #fff; margin: 20px 0;">${step.content}</p>`;
+            }
+
+            const isLastStep = index === ADS_CONFIG.preVideoAds.steps.length - 1;
+            content += `
+                <button class="ad-button" id="stepBtn${index}" ${!step.skippable ? 'disabled' : ''} onclick="nextStep()">
+                    ${step.buttonText || (isLastStep ? 'Watch Movie' : 'Continue')}
+                </button>
+                ${!step.skippable ? '<p class="ad-skip-info">Button will be enabled after countdown</p>' : ''}
+            `;
+
+            return content;
+        }
+
+        // Start a step
+        function startStep(stepIndex) {
+            const step = ADS_CONFIG.preVideoAds.steps[stepIndex];
+            const button = document.getElementById(`stepBtn${stepIndex}`);
+            
+            if (step.type === 'countdown' || step.duration > 0) {
+                let timeLeft = step.duration;
+                const countdownDisplay = document.getElementById(`countdownDisplay${stepIndex}`);
+                const countdown = document.getElementById(`countdown${stepIndex}`);
+                const progressBar = document.getElementById(`progressBar${stepIndex}`);
+                
+                const progressIncrement = 100 / step.duration;
+                let currentProgress = 0;
+
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    currentProgress += progressIncrement;
+                    
+                    if (countdownDisplay) countdownDisplay.textContent = timeLeft;
+                    if (countdown) countdown.textContent = timeLeft;
+                    if (progressBar) progressBar.style.width = currentProgress + '%';
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        if (button) {
+                            button.disabled = false;
+                            button.style.background = '#4CAF50';
+                            button.textContent = step.buttonText || (stepIndex === ADS_CONFIG.preVideoAds.steps.length - 1 ? 'Watch Movie Now!' : 'Continue');
+                        }
+                    }
+                }, 1000);
+
+                stepTimers.push(timer);
+            }
+
+            // Update step indicators
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === stepIndex);
+            });
+        }
+
+        // Next step
+        function nextStep() {
+            // Open ad link if exists
+            const step = ADS_CONFIG.preVideoAds.steps[currentStep];
+            if (step.link) {
+                window.open(step.link, '_blank');
+            }
+
+            // Clear current timers
+            stepTimers.forEach(timer => clearInterval(timer));
+            stepTimers = [];
+
+            // Hide current step
+            const currentStepEl = document.getElementById(`step${currentStep}`);
+            if (currentStepEl) currentStepEl.classList.remove('active');
+
+            currentStep++;
+
+            // Check if there are more steps
+            if (currentStep < ADS_CONFIG.preVideoAds.steps.length) {
+                const nextStepEl = document.getElementById(`step${currentStep}`);
+                if (nextStepEl) nextStepEl.classList.add('active');
+                startStep(currentStep);
+            } else {
+                // All steps completed, load movie
+                closeAdModal();
+                loadMovie();
+            }
+        }
+
+        // Close ad modal
+        function closeAdModal() {
+            stepTimers.forEach(timer => clearInterval(timer));
+            stepTimers = [];
+            document.getElementById('adModal').style.display = 'none';
+        }
+
+        // ========================================
+        // MOVIE FUNCTIONS
+        // ========================================
+
+        // Render movies
+        function renderMovies() {
+            renderCategory('bollywood', 'bollywood-grid');
+            renderCategory('hollywood', 'hollywood-grid');
+            renderCategory('international', 'international-grid');
+        }
+
+        function renderCategory(category, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = '';
+            
+            movies[category].forEach((movie, index) => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <div class="movie-poster">
+                        <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(movie.title)}'">
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-year">${movie.year}</div>
+                        <button class="watch-btn" onclick="playMovie('${category}', ${index})">▶ Watch Now</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Play movie
+        function playMovie(category, index) {
+            currentMovie = { category, index };
+            showMultiStepAds();
+        }
+
+        // Load movie
+        function loadMovie() {
+            if (!currentMovie) return;
+            
+            const movie = movies[currentMovie.category][currentMovie.index];
+            document.getElementById('videoTitle').textContent = movie.title + ' (' + movie.year + ')';
+            document.getElementById('videoContainer').innerHTML = `<iframe src="${movie.server}" allowfullscreen></iframe>`;
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        // Close video
+        function closeVideo() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoContainer').innerHTML = '';
+            currentMovie = null;
+        }
+
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        initBannerAds();
+        renderMovies();
+    </script>
+</body>
+</html>
